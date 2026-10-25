@@ -219,7 +219,7 @@ export const uiText = {
 
   validation: {
     required: (field: string) => `${field} is missing.`,
-    notNumber: (field: string) => `${field} must be a number.`,
+    notNumber: (field: string) => `${field}: please check this number.`,
     negative: (field: string) => `${field} cannot be below 0.`,
     percentRange: (field: string) => `${field} must be between 0 and 100.`,
     unknownPreset: 'Pick a set of standard factors.',

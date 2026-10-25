@@ -44,6 +44,27 @@ describe('csvExport', () => {
     expect(csvLines(csv)[1]).toContain(',"Paint, ""extra"" strong",');
   });
 
+  it("puts a ' in front of text cells that start with = + - or @", () => {
+    expect(escapeCsvCell('=SUM(A1:A2)')).toBe("'=SUM(A1:A2)");
+    expect(escapeCsvCell('+49 421 000')).toBe("'+49 421 000");
+    expect(escapeCsvCell('-coating')).toBe("'-coating");
+    expect(escapeCsvCell('@import')).toBe("'@import");
+    expect(escapeCsvCell('=HYPERLINK("x", "y")')).toBe('"\'=HYPERLINK(""x"", ""y"")"');
+    expect(escapeCsvCell('Paint = binder')).toBe('Paint = binder');
+
+    const use = { ...EXAMPLE_COMPANY.uses[0], useName: '=1+1' };
+    const csv = buildReportCsv({ ...EXAMPLE_COMPANY, uses: [use] });
+    expect(csvLines(csv)[1]).toContain(",'=1+1,");
+  });
+
+  it("never puts a ' in front of number cells", () => {
+    expect(escapeCsvCell('-5', 'number')).toBe('-5');
+    expect(escapeCsvCell('2.4354', 'number')).toBe('2.4354');
+
+    const csv = buildReportCsv(EXAMPLE_COMPANY);
+    expect(csvLines(csv)[1]).toContain(',2.4354,t,');
+  });
+
   it('joins multiple values with "; " and leaves hidden fields empty', () => {
     const use = {
       ...EXAMPLE_COMPANY.uses[0],

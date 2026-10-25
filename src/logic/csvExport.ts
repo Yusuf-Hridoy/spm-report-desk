@@ -95,35 +95,43 @@ export function buildReportRow(use: UseRow, state: ReportState): ReportRow {
   };
 }
 
-// Quotes a cell when it holds a comma, quote or line break. Quotes inside are doubled.
-export function escapeCsvCell(value: string): string {
-  if (/[",\r\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
-  return value;
+export type CsvCellKind = 'text' | 'number';
+
+// Text starting with one of these could run as a formula in Excel or Sheets.
+const FORMULA_START = /^[=+\-@]/;
+
+// Puts a ' in front of text that starts with = + - or @ (never number cells), so
+// spreadsheets show it as text. Then quotes the cell when it holds a comma, quote
+// or line break, and doubles quotes inside.
+export function escapeCsvCell(value: string, kind: CsvCellKind = 'text'): string {
+  const safe = kind === 'text' && FORMULA_START.test(value) ? `'${value}` : value;
+  if (/[",\r\n]/.test(safe)) return `"${safe.replace(/"/g, '""')}"`;
+  return safe;
 }
 
-function rowToCsvCells(row: ReportRow): string[] {
+function rowToEscapedCsvCells(row: ReportRow): string[] {
   // Order must match IUCLID_CSV_COLUMNS.
   return [
-    row.use,
-    row.derogation,
-    row.useName,
-    row.productCategory,
-    row.sectorOfUse,
-    row.technicalFunction,
-    row.sites,
-    row.polymers,
-    row.emissionValue,
-    row.emissionUnit,
-    row.concentration,
+    escapeCsvCell(row.use),
+    escapeCsvCell(row.derogation),
+    escapeCsvCell(row.useName),
+    escapeCsvCell(row.productCategory),
+    escapeCsvCell(row.sectorOfUse),
+    escapeCsvCell(row.technicalFunction),
+    escapeCsvCell(row.sites),
+    escapeCsvCell(row.polymers),
+    escapeCsvCell(row.emissionValue, 'number'),
+    escapeCsvCell(row.emissionUnit),
+    escapeCsvCell(row.concentration),
   ];
 }
 
 // UTF-8 with BOM so Excel shows umlauts correctly. CRLF line breaks.
 export function buildReportCsv(state: ReportState): string {
   const lines = [
-    [...IUCLID_CSV_COLUMNS],
-    ...state.uses.map((use) => rowToCsvCells(buildReportRow(use, state))),
-  ].map((cells) => cells.map(escapeCsvCell).join(','));
+    IUCLID_CSV_COLUMNS.map((column) => escapeCsvCell(column)),
+    ...state.uses.map((use) => rowToEscapedCsvCells(buildReportRow(use, state))),
+  ].map((cells) => cells.join(','));
   return CSV_BOM + lines.join(LINE_BREAK) + LINE_BREAK;
 }
 
