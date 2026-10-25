@@ -1,0 +1,61 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-accent: #0f5257;
+  --color-accent-dark: #0a3a3e;
+  --color-accent-light: #e7f1f1;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .field-input {
+    @apply mt-1 block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base text-gray-900;
+  }
+  .field-input:focus-visible {
+    @apply border-accent;
+  }
+  .field-input[aria-invalid='true'] {
+    @apply border-red-700;
+  }
+  .field-label {
+    @apply block font-medium text-gray-900;
+  }
+  .card {
+    @apply rounded-lg border border-gray-300 bg-white p-4 sm:p-6;
+  }
+  .btn-primary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-md bg-accent px-5 py-2 font-semibold text-white hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-gray-400;
+  }
+  .btn-secondary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-md border border-accent bg-white px-5 py-2 font-semibold text-accent hover:bg-accent-light disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-500;
+  }
+  .btn-quiet {
+    @apply inline-flex min-h-11 items-center justify-center rounded-md px-3 py-2 font-medium text-gray-700 underline underline-offset-2 hover:text-gray-900;
+  }
+  .choice-card {
+    @apply flex cursor-pointer gap-3 rounded-lg border border-gray-300 p-4 hover:border-accent has-[:checked]:border-2 has-[:checked]:border-accent has-[:checked]:bg-accent-light;
+  }
+}
+
+@media print {
+  @page {
+    margin: 15mm;
+  }
+  body {
+    font-size: 11pt;
+  }
+  tr,
+  .print-keep-together {
+    break-inside: avoid;
+  }
+}
