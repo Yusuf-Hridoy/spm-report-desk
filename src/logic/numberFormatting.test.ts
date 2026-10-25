@@ -13,10 +13,19 @@ describe('parseNumberInput', () => {
     expect(parseNumberInput('0,25')).toBe(0.25);
   });
 
-  it('reads a dot as the decimal sign', () => {
-    expect(parseNumberInput('1.200')).toBe(1.2);
+  it('reads a dot as the decimal sign when it is clear', () => {
+    expect(parseNumberInput('0.125')).toBe(0.125);
     expect(parseNumberInput('45.5')).toBe(45.5);
+    expect(parseNumberInput('1.25')).toBe(1.25);
+    expect(parseNumberInput('1234.567')).toBe(1234.567);
     expect(parseNumberInput('120')).toBe(120);
+  });
+
+  it('returns NaN for German-style thousands dots', () => {
+    expect(parseNumberInput('1.200')).toBeNaN();
+    expect(parseNumberInput('12.500')).toBeNaN();
+    expect(parseNumberInput('-1.200')).toBeNaN();
+    expect(parseNumberInput('1.234.567')).toBeNaN();
   });
 
   it('returns NaN when the number is unclear', () => {

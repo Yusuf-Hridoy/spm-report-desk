@@ -28,14 +28,21 @@ const PLAIN_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
 const THOUSANDS_GROUPED = /^-?\d{1,3}(,\d{3})+(\.\d*)?$/;
 // One comma, no dot: "45,5", "0,25", ",5".
 const SINGLE_COMMA_NO_DOT = /^-?(\d+,\d*|,\d+)$/;
+// 1–3 digits, a dot, exactly 3 digits: "1.200", "12.500". In German this is a
+// thousands dot, so we refuse to guess. Group 1 is the part before the dot.
+const DOT_THEN_THREE_DIGITS = /^-?(\d{1,3})\.\d{3}$/;
 
 // Reads what the user typed. Empty → null. Anything unclear → NaN, so the form asks
 // the user to check the number instead of guessing.
 // A comma is a decimal sign only with exactly one comma, no dot, and NOT exactly
 // 3 digits after it. "1,200" is read as 1200, never as 1.2.
+// A dot with exactly 3 digits after it is unclear ("1.200" → NaN) unless the part
+// before it is "0" ("0.125" → 0.125). German "1.234.567" is NaN too.
 export function parseNumberInput(text: string): number | null {
   const trimmed = text.trim();
   if (trimmed === '') return null;
+  const dotThenThree = DOT_THEN_THREE_DIGITS.exec(trimmed);
+  if (dotThenThree && dotThenThree[1] !== '0') return NaN;
   if (PLAIN_NUMBER.test(trimmed)) return Number(trimmed);
   if (THOUSANDS_GROUPED.test(trimmed)) return Number(trimmed.replace(/,/g, ''));
   if (SINGLE_COMMA_NO_DOT.test(trimmed) && trimmed.split(',')[1].length !== 3) {

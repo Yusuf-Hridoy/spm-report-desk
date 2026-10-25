@@ -219,7 +219,8 @@ export const uiText = {
 
   validation: {
     required: (field: string) => `${field} is missing.`,
-    notNumber: (field: string) => `${field}: please check this number.`,
+    notNumber: (field: string) =>
+      `${field}: Please check this number. Write thousands without a dot or comma, for example 1200.`,
     negative: (field: string) => `${field} cannot be below 0.`,
     percentRange: (field: string) => `${field} must be between 0 and 100.`,
     unknownPreset: 'Pick a set of standard factors.',
