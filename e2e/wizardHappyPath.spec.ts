@@ -31,8 +31,8 @@ test('example company goes through all 5 steps and downloads the CSV', async ({ 
     page.getByRole('heading', { level: 2, name: 'How much plastic escapes each year' }),
   ).toBeVisible();
   await expect(page.getByTestId('emission-result')).toHaveText('2.4354 t');
-  await expect(wizard.getByText('These release factors are not yet verified.')).toBeVisible();
-  await expect(wizard.getByText('Not yet verified', { exact: true })).toBeVisible();
+  await expect(wizard.getByText(/These are ECHA worst-case default factors\./)).toBeVisible();
+  await expect(wizard.getByText('Not yet verified', { exact: true })).toHaveCount(0);
 
   await next.click();
   await expect(page.getByRole('heading', { level: 2, name: 'Check your report' })).toBeVisible();

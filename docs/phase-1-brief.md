@@ -246,7 +246,7 @@ export interface EmissionResult {
   totalKg: number;
   displayValue: number;
   displayUnit: 'kg' | 't';
-  warnings: string[]; // e.g. "Release factors not yet verified"
+  warnings: string[]; // e.g. "These are ECHA worst-case default factors…"
 }
 ```
 
@@ -322,7 +322,8 @@ Comment: `// VERIFY exact wording against the IUCLID picklist.`
   waterPercent: 2.0,
   soilPercent: 0.01,
   source: 'ECHA Guidance R.16 (environmental release categories)',
-  verified: false,
+  sourceUrl: 'https://echa.europa.eu/documents/10162/13632/information_requirements_r16_en.pdf',
+  verified: true,
 }
 ```
 
@@ -406,7 +407,7 @@ Pure functions. No React. Every step is pushed to `steps[]`.
   - `soilKg = spmT × 1000 × soilPercent / 100`
   - `releaseKg = airKg + waterKg + soilKg`
   - One step each for air, water (before and after mitigation), soil.
-  - If the preset has `verified: false` → add warning "These release factors are not yet verified."
+  - Method `preset` → always add warning "These are ECHA worst-case default factors. Your real emission is likely lower. If you have measured data or sector-specific factors, use those instead."
 
 **Step D — Add transport and spills**
 
@@ -541,7 +542,7 @@ All text must be **plain, everyday English**. Short sentences. No jargon without
 3. Option B, 54 t dry, 100% SPM → 54 t SPM.
 4. Option A unknown → uses 100% and adds the "highest value" warning.
 5. Option A 10–30% on 10 t → 3 t SPM.
-6. Preset ERC2 on 54 t SPM → air 1,350 kg, water 1,080 kg, soil 5.4 kg, total 2,435.4 kg → displayed 2.4354 t, plus "not verified" warning.
+6. Preset ERC2 on 54 t SPM → air 1,350 kg, water 1,080 kg, soil 5.4 kg, total 2,435.4 kg → displayed 2.4354 t, plus the worst-case warning.
 7. Water mitigation 50% on the case above → water 540 kg, total 1,895.4 kg.
 8. Measured 50 kg → displayed 50 kg.
 9. Transport 10 kg + spills 5 kg added to measured 50 kg → 65 kg.

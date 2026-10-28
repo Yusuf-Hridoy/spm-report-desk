@@ -113,7 +113,7 @@ export function calculateEmission(
         ]);
       }
       factors = preset;
-      if (!preset.verified) warnings.push(text.warningUnverifiedFactors);
+      warnings.push(text.warningPresetWorstCase);
     } else {
       factors = input.customFactors as ReleaseFactors;
     }

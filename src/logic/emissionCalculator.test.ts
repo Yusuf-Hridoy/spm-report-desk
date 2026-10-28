@@ -78,7 +78,7 @@ describe('emissionCalculator', () => {
     expect(result.warnings).not.toContain(text.warningUnknownRange);
   });
 
-  it('6. preset ERC2 on 54 t SPM gives 2.4354 t and a "not verified" warning', () => {
+  it('6. preset ERC2 on 54 t SPM gives 2.4354 t and the worst-case warning', () => {
     const result = calculateEmission(exampleEmission);
     expect(stepValue(result, text.airLabel)).toBeCloseTo(1350, 6);
     expect(stepValue(result, text.waterAfterLabel)).toBeCloseTo(1080, 6);
@@ -86,7 +86,7 @@ describe('emissionCalculator', () => {
     expect(result.totalKg).toBeCloseTo(2435.4, 6);
     expect(result.displayValue).toBe(2.4354);
     expect(result.displayUnit).toBe('t');
-    expect(result.warnings).toContain(text.warningUnverifiedFactors);
+    expect(result.warnings).toContain(text.warningPresetWorstCase);
   });
 
   it('7. 50% water mitigation halves the water release', () => {
@@ -145,7 +145,7 @@ describe('emissionCalculator', () => {
     expect(tryCalculateEmission(bad).issues.map((issue) => issue.field)).toEqual(['solidsPercent']);
   });
 
-  it('works with custom factors and no "not verified" warning', () => {
+  it('works with custom factors and no worst-case warning', () => {
     const result = calculateEmission({
       ...fiftyFourTonnesSpm,
       releaseMethod: 'custom',

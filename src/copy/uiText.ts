@@ -214,7 +214,8 @@ export const uiText = {
     optionBReportValue: 'Option B',
     warningUnknownRange:
       'You did not know the amount, so we used the highest value (90–100%), as ECHA asks.',
-    warningUnverifiedFactors: 'These release factors are not yet verified.',
+    warningPresetWorstCase:
+      'These are ECHA worst-case default factors. Your real emission is likely lower. If you have measured data or sector-specific factors, use those instead.',
   },
 
   validation: {

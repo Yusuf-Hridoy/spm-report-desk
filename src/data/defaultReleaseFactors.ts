@@ -4,6 +4,7 @@ export interface ReleaseFactorPreset extends ReleaseFactors {
   id: string;
   label: string;
   source: string;
+  sourceUrl?: string;
   verified: boolean; // false → show UnverifiedValueBadge in the UI
 }
 
@@ -15,7 +16,8 @@ export const DEFAULT_RELEASE_FACTOR_PRESETS: readonly ReleaseFactorPreset[] = [
     waterPercent: 2.0,
     soilPercent: 0.01,
     source: 'ECHA Guidance R.16 (environmental release categories)',
-    verified: false,
+    sourceUrl: 'https://echa.europa.eu/documents/10162/13632/information_requirements_r16_en.pdf',
+    verified: true,
   },
 ];
 
